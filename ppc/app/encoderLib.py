@@ -6,12 +6,14 @@ import io
 
 
 def createMatrix():
-    randstring = str(uuid4())
+    randstring = str(uuid4()).encode('utf8')
     matrix = encode(randstring)
     img = Image.frombytes('RGB', (matrix.width, matrix.height), matrix.pixels)
-    img_byte_arr = io.BytesIO()
-    img.save(img_byte_arr, format='PNG')
-    matrixBytes = img_byte_arr.getvalue()
+    
+    buf = io.BytesIO()
+    img.save(buf, format='PNG')
+    matrixBytes = buf.getvalue()
+
     b64encoded = b64encode(matrixBytes)
     return [randstring, b64encoded]
 
