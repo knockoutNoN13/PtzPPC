@@ -17,13 +17,14 @@ async def handle_connection(reader, writer):
         print(f"Client suddenly closed while receiving from {addr}")
         pass
 
-    questions = [1, 2, 3]
-    answears = [1, 2, 3]
     
     for i in range(3):
-
+        round = createMatrix()
+        answer = round[0]
+        question = round[1]
+        # print(answer)
         try:
-            writer.write( (str(questions[i]) + '\n').encode('UTF-8') )
+            writer.write((question) + b'\n')
 
         except ConnectionError:
             break
@@ -38,7 +39,7 @@ async def handle_connection(reader, writer):
         if not data:
             break
 
-        if data != str(answears[i]):
+        if data != str(answer):
             print('break on = ')
             break
 

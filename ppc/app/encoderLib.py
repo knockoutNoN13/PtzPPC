@@ -13,8 +13,7 @@ def createMatrix():
     img.save(img_byte_arr, format='PNG')
     matrixBytes = img_byte_arr.getvalue()
     b64encoded = b64encode(matrixBytes)
-    
-    return [randstring, b64encoded[0:10]]
+    return [randstring, b64encoded]
 
 if __name__ == '__main__':
     print(createMatrix())
