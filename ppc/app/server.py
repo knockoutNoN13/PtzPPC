@@ -18,13 +18,14 @@ async def handle_connection(reader, writer):
         pass
 
     
-    for i in range(3):
+    for i in range(1,100):
         round = createMatrix()
         answer = round[0]
         question = round[1]
-        # print(answer)
+        print(answer)
+
         try:
-            writer.write((question) + b'\n')
+            writer.write(b'Round ' + str(i).encode() + b'/100\t' + question + b'\n')
 
         except ConnectionError:
             break
@@ -39,11 +40,11 @@ async def handle_connection(reader, writer):
         if not data:
             break
 
-        if data != str(answer):
-            print('break on = ')
+        if data != answer.decode():
+            writer.write(b'Oooops... you had mistake!')
             break
 
-        if i == 2:
+        if i == 100:
             writer.write(b'flag')
 
     # while True:
