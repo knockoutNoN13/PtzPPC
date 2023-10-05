@@ -56,10 +56,11 @@ async def handle_connection(reader, writer):
         if data != answer.decode():
             writer.write(b'Oooops... you had mistake!')
             break
-    
+
     
     writer.close()
     await writer.wait_closed()
+    
     print("Disconnected by", addr)
 
 async def main(host, port):
