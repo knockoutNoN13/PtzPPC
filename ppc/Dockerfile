@@ -10,6 +10,6 @@ EXPOSE 8080
 
 COPY ./app /app
 
-ENTRYPOINT [ "python3" ]
+# ENTRYPOINT [ "python3" ]
 
-CMD [ "/app/server.py" ]
+# CMD [ "/app/server.py" ]

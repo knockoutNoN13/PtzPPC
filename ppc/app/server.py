@@ -1,74 +1,65 @@
 import asyncio
 from encoderLib import createMatrix
+
 async def handle_connection(reader, writer):
 
     addr = writer.get_extra_info("peername")
     print("Connected by", addr)
     try:
         writer.write(b'''
- ______     ______     ______     ______     __    __     ______     ______   ______     __     __  __    
-/\  == \   /\  __ \   /\  ___\   /\  ___\   /\ "-./  \   /\  __ \   /\__  _\ /\  == \   /\ \   /\_\_\_\   
-\ \  __<   \ \  __ \  \ \___  \  \ \  __\   \ \ \-./\ \  \ \  __ \  \/_/\ \/ \ \  __<   \ \ \  \/_/\_\/_  
- \ \_____\  \ \_\ \_\  \/\_____\  \ \_____\  \ \_\ \ \_\  \ \_\ \_\    \ \_\  \ \_\ \_\  \ \_\   /\_\/\_\ 
-  \/_____/   \/_/\/_/   \/_____/   \/_____/   \/_/  \/_/   \/_/\/_/     \/_/   \/_/ /_/   \/_/   \/_/\/_/ 
-                                                                                                          
+    ____                                       
+   / __ )  ____ _   _____  ___                 
+  / __  | / __ `/  / ___/ / _ \                
+ / /_/ / / /_/ /  (__  ) /  __/                
+/_____/  \__,_/  /____/  \___/                 
+                                               
+    __  ___           __             _         
+   /  |/  /  ____ _  / /_   _____   (_)   _  __
+  / /|_/ /  / __ `/ / __/  / ___/  / /   | |/_/
+ / /  / /  / /_/ / / /_   / /     / /   _>  <  
+/_/  /_/   \__,_/  \__/  /_/     /_/   /_/|_|  
+                                                                                                                             
 ''')
     except ConnectionError:
         print(f"Client suddenly closed while receiving from {addr}")
         pass
 
     
-    for i in range(1,100):
+    for i in range(1,201):
         round = createMatrix()
         answer = round[0]
         question = round[1]
-        print(answer)
 
         try:
-            writer.write(b'Round ' + str(i).encode() + b'/100\t' + question + b'\n')
+            writer.write(b'Round ' + str(i).encode() + b'/200\t' + question + b'\n')
 
         except ConnectionError:
             break
 
         try:
             data = await reader.read(1024)
-            data = ''.join(data.decode().split())
+            if not data:
+                break
+            data = ''.join(data.decode().split())      
 
         except ConnectionError:
             break
 
+        if i == 200:
+            writer.write(b'OnegoCTF{ju$t_bas3_0v3r_d@ta_ma7rix}')
+            break
+
         if not data:
+            writer.write(b'Oooops... no answer!')
             break
 
         if data != answer.decode():
             writer.write(b'Oooops... you had mistake!')
             break
-
-        if i == 100:
-            writer.write(b'flag')
-
-    # while True:
-    #     # Receive
-    #     try:
-    #         data = await reader.read(1024)
-
-    #     except ConnectionError:
-    #         print(f"Client suddenly closed while receiving from {addr}")
-    #         break
-
-    #     if not data:
-    #         break
-
-    #     data = data.upper()
-
-    #     try:
-    #         writer.write(data)
-
-    #     except ConnectionError:
-    #         print(f"Client suddenly closed, cannot send")
-    #         break
-
+    
+    
     writer.close()
+    await writer.wait_closed()
     print("Disconnected by", addr)
 
 async def main(host, port):
