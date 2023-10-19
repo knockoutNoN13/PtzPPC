@@ -46,8 +46,12 @@ async def handle_connection(reader, writer):
             break
 
         if i == 200:
-            writer.write(b'OnegoCTF{ju$t_bas3_0v3r_d@ta_ma7rix}')
-            break
+            try:
+                flag = open('/app/flag.txt','r').read()
+                writer.write(flag.encode())
+                break
+            except Exception as e:
+                print(e)
 
         if not data:
             writer.write(b'Oooops... no answer!')
